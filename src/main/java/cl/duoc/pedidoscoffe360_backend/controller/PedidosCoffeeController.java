@@ -7,18 +7,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/pedidos")
+@CrossOrigin(origins = "*") // Permite las peticiones desde tu frontend en Angular
 public class PedidosCoffeeController {
 
-    // 1. Lista mutable 
+    // 1. Lista mutable (Actualizada de "bebida" a "producto")
     private List<Map<String, Object>> ordenes = new ArrayList<>(List.of(
-        Map.of("id", 1, "bebida", "Latte Vainilla", "estado", "PREPARANDO"),
-        Map.of("id", 2, "bebida", "Espresso", "estado", "LISTO_PARA_RETIRO"),
-        Map.of("id", 3, "bebida", "Cappuccino", "estado", "ENTREGADO"),
-        Map.of("id", 4, "bebida", "Mocha", "estado", "PREPARANDO"),
-        Map.of("id", 5, "bebida", "Americano", "estado", "LISTO_PARA_RETIRO"),
-        Map.of("id", 6, "bebida", "Frappuccino", "estado", "ENTREGADO")
-
-
+        Map.of("id", 1, "producto", "Latte Vainilla", "estado", "PREPARANDO"),
+        Map.of("id", 2, "producto", "Espresso", "estado", "LISTO_PARA_RETIRO"),
+        Map.of("id", 3, "producto", "Cappuccino", "estado", "ENTREGADO"),
+        Map.of("id", 4, "producto", "Mocha", "estado", "PREPARANDO"),
+        Map.of("id", 5, "producto", "Americano", "estado", "LISTO_PARA_RETIRO"),
+        Map.of("id", 6, "producto", "Frappuccino", "estado", "ENTREGADO")
     ));
 
     // 2. GET: Obtener todos los pedidos
@@ -60,7 +59,6 @@ public class PedidosCoffeeController {
     // 6. ELIMINAR (DELETE)
     @DeleteMapping("/{id}")
     public Map<String, String> eliminarPedido(@PathVariable int id) {
-        // Busca si el ID existe y lo borra automáticamente de la lista
         boolean borrado = ordenes.removeIf(orden -> (Integer) orden.get("id") == id);
         
         if (borrado) {
@@ -68,6 +66,4 @@ public class PedidosCoffeeController {
         }
         return Map.of("error", "Pedido no encontrado");
     }
-
-
 }
