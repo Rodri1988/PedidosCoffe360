@@ -17,6 +17,7 @@ public final class RabbitNames{
     public static final String NOTIFICACIONES_DLQ = "pedidos.notificaciones.dlq";
 
     public static final String RK_ESPRESSO = "pedido.espresso.*";
+    public static final String RK_AMERICANO = "pedido.americano.*";
     public static final String RK_LATTE = "pedido.latte.*";
     public static final String RK_CAPUCCINO = "pedido.capuccino.*";
     public static final String RK_MOCHA = "pedido.mocha.*";

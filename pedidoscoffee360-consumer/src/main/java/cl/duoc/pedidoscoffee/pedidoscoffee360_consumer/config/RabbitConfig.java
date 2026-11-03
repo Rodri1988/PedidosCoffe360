@@ -49,6 +49,13 @@ public class RabbitConfig{
         .with(RabbitNames.RK_ESPRESSO);
     }
     @Bean
+    public Binding americanoBinding(Queue espressoQueue, TopicExchange pedidosExchange){
+        return BindingBuilder
+        .bind(espressoQueue)
+        .to(pedidosExchange)
+        .with(RabbitNames.RK_AMERICANO);
+    }
+    @Bean
     public Binding latteBinding(Queue lecheQueue, TopicExchange pedidosExchange){
         return BindingBuilder
         .bind(lecheQueue)
