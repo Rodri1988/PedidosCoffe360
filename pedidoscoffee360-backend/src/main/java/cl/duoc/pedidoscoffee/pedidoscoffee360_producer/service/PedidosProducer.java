@@ -19,7 +19,8 @@ public class PedidosProducer{
 
         String mensaje = pedido.getId() + "|" +
                     pedido.getTipo() + "|" +
-                    pedido.getProducto() + "|" +
+                    pedido.getUbicacion() + "|" +
+                    pedido.getDescripcion() + "|" +
                     pedido.getEstado();
 
         rabbitTemplate.convertAndSend(RabbitNames.EXCHANGE,

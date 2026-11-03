@@ -19,9 +19,9 @@ public class PedidosController{
 
     public PedidosController(PedidosProducer pedidosProducer){
         this.pedidosProducer = pedidosProducer;
-        ordenes.add(new Pedido(secuencia.incrementAndGet(), "latte", "Latte Vainilla", "PREPARANDO"));
-        ordenes.add(new Pedido(secuencia.incrementAndGet(), "espresso", "Espresso", "LISTO"));
-        ordenes.add(new Pedido(secuencia.incrementAndGet(), "capuccino", "Cappuccino", "ENTREGADO"));
+        ordenes.add(new Pedido(secuencia.incrementAndGet(), "latte", "Mesa 1", "Latte Vainilla", "PREPARANDO"));
+        ordenes.add(new Pedido(secuencia.incrementAndGet(), "espresso", "Barra", "Espresso", "LISTO"));
+        ordenes.add(new Pedido(secuencia.incrementAndGet(), "capuccino", "Mesa 3", "Cappuccino", "ENTREGADO"));
     }
 
     @GetMapping

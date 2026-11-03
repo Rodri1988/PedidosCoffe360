@@ -17,7 +17,7 @@ Microservicios del sistema de pedidos de cafe con RabbitMQ. El front esta en otr
 3. `./mvnw spring-boot:run` en `pedidoscoffee360-backend`
 4. `./mvnw spring-boot:run` en `pedidoscoffee360-admin`
 
-Prueba: `POST http://localhost:8888/api/pedidos` con `{"tipo":"latte","producto":"Latte Vainilla"}`.
-Un producto que contenga `ERROR` termina en la DLQ de su cola.
+Prueba: `POST http://localhost:8888/api/pedidos` con `{"tipo":"latte","ubicacion":"Mesa 5","descripcion":"Latte Vainilla"}`.
+Una descripcion que contenga `ERROR` termina en la DLQ de su cola.
 
 La version original del backend (EA1, sin RabbitMQ) esta en la rama `main` y en la etiqueta `ea1-original`.

@@ -4,15 +4,17 @@ public class Pedido {
 
     private Integer id;
     private String tipo;
-    private String producto;
+    private String ubicacion;
+    private String descripcion;
     private String estado;
 
     public Pedido() { }
 
-    public Pedido(Integer id, String tipo, String producto, String estado) {
+    public Pedido(Integer id, String tipo, String ubicacion, String descripcion, String estado) {
         this.id = id;
         this.tipo = tipo;
-        this.producto = producto;
+        this.ubicacion = ubicacion;
+        this.descripcion = descripcion;
         this.estado = estado;
     }
 
@@ -22,8 +24,11 @@ public class Pedido {
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
 
-    public String getProducto() { return producto; }
-    public void setProducto(String producto) { this.producto = producto; }
+    public String getUbicacion() { return ubicacion; }
+    public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
+
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
