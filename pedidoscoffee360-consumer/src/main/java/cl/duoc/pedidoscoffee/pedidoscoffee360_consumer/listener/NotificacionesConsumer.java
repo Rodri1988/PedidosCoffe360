@@ -9,38 +9,64 @@ import java.io.IOException;
 
 @Component
 public class NotificacionesConsumer{
+
+    //Cantidad maxima de intentos sobre UNA misma entrega (si todos fallan, llega UN mensaje a la DLQ)
+    private static final int MAX_INTENTOS = 3;
+
     @RabbitListener(queues = RabbitNames.NOTIFICACIONES_QUEUE)
     public void recibir(String mensaje,
         Message message,
         Channel channel)throws IOException{
 
-        
         System.out.println("[NOTIFICACIONES] Pedido Recibido: " + mensaje);
-        long deliveryTag = 0   ;
+        long deliveryTag = message.getMessageProperties().getDeliveryTag();
 
-        try{
-            deliveryTag = message.getMessageProperties().getDeliveryTag();
-            //Simulamos el procesamiento del pedido
-            if(mensaje.contains("ERROR")){
-                throw new RuntimeException("Error al procesar el pedido");
-                //Comfirmamos con rabitmq que el mensaje fue procesado correctamente
+        for(int intento = 1; intento <= MAX_INTENTOS; intento++){
+            try{
+                procesar(mensaje);
+                //Confirmamos con rabbitmq que el mensaje fue procesado correctamente
+                channel.basicAck(deliveryTag, false);
+                System.out.println("[NOTIFICACIONES] ACK Enviada: ");
+                return;
             }
-            System.out.println("[NOTIFICACIONES] Pedido fue procesado...");
-
+            catch(IllegalArgumentException ex){
+                //Error NO recuperable: el pedido es invalido, reintentar no lo arregla
+                System.out.println("[NOTIFICACIONES] Error no recuperable: " + ex.getMessage());
+                //Rechazamos el mensaje y no lo reencolamos, va a la DLQ
+                channel.basicNack(deliveryTag, false, false);
+                System.out.println("[NOTIFICACIONES] NACK Enviada: pedido enviado a la DLQ");
+                return;
+            }
+            catch(RuntimeException ex){
+                //Error recuperable: puede ser una falla temporal, se reintenta
+                System.out.println("[NOTIFICACIONES] Intento " + intento + " fallo: " + ex.getMessage());
+                if(intento == MAX_INTENTOS){
+                    //Se acabaron los intentos, rechazamos el mensaje y no lo reencolamos, va a la DLQ
+                    channel.basicNack(deliveryTag, false, false);
+                    System.out.println("[NOTIFICACIONES] NACK Enviada: sin intentos, pedido enviado a la DLQ");
+                    return;
+                }
+                try{
+                    Thread.sleep(1000L * intento);
+                }
+                catch(InterruptedException interrumpido){
+                    Thread.currentThread().interrupt();
+                    channel.basicNack(deliveryTag, false, false);
+                    System.out.println("[NOTIFICACIONES] NACK Enviada: proceso interrumpido, pedido enviado a la DLQ");
+                    return;
+                }
+            }
         }
+    }
 
-        catch(RuntimeException ex){
-            System.out.println("[NOTIFICACIONES] Error al procesar el pedido: " + ex.getMessage());
-            //Rechazamos el mensaje y no lo reencolamos
-            channel.basicNack(deliveryTag, false, false);
-            System.out.println("[NOTIFICACIONES] NACK Enviada: ");
-            return;
-            //Si queremos reencolar el mensaje, podemos usar basicNack con requeue = true
-            
+    //Simulamos el procesamiento del pedido
+    private void procesar(String mensaje){
+        if(mensaje.contains("ERROR")){
+            throw new IllegalArgumentException("Error al procesar el pedido");
         }
-        //Comfirmamos con rabitmq que el mensaje fue procesado correctamente
-        channel.basicAck(deliveryTag, false);
-        System.out.println("[NOTIFICACIONES] ACK Enviada: ");
-    
+        if(mensaje.contains("REINTENTO")){
+            throw new IllegalStateException("Falla temporal simulada");
+        }
+        System.out.println("[NOTIFICACIONES] Pedido fue procesado...");
     }
 }
