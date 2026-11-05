@@ -21,6 +21,7 @@ public class PedidosProducer{
                     pedido.getTipo() + "|" +
                     pedido.getUbicacion() + "|" +
                     pedido.getDescripcion() + "|" +
+                    pedido.isDecaf() + "|" +
                     pedido.getEstado();
 
         rabbitTemplate.convertAndSend(RabbitNames.EXCHANGE,
