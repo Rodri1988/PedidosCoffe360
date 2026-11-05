@@ -11,12 +11,12 @@ public class Pedido {
 
     public Pedido() { }
 
-    public Pedido(Integer id, String tipo, String ubicacion, String descripcion, boolean decaf, String estado) {
+    public Pedido(Integer id, String tipo, String ubicacion, String descripcion, Boolean decaf, String estado) {
         this.id = id;
         this.tipo = tipo;
         this.ubicacion = ubicacion;
         this.descripcion = descripcion;
-        this.decaf = decaf;
+        this.decaf = decaf != null && decaf;
         this.estado = estado;
     }
 
@@ -33,7 +33,7 @@ public class Pedido {
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
     public boolean isDecaf() { return decaf; }
-    public void setDecaf(boolean decaf) { this.decaf = decaf; }
+    public void setDecaf(Boolean decaf) { this.decaf = decaf != null && decaf; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
